@@ -1,0 +1,26 @@
+# This package is NON-FREE (limitation of use) but may be redistributed
+# when built for native Win64 (but not for Cygwin due to GPLv3+)
+CROSS_HOST="x86_64-w64-mingw32"
+inherit cross
+
+NAME="mingw64-x86_64-unrar"
+VERSION=5.2.7
+RELEASE=1
+CATEGORY="Devel"
+SUMMARY="RAR archive decompressor for Win64 toolchain"
+HOMEPAGE="http://www.rarlab.com/"
+SRC_URI="http://www.rarlab.com/rar/unrarsrc-${VERSION}.tar.gz"
+SRC_DIR="unrar"
+PATCH_URI="01-makefile.patch  02-mingw.patch"
+
+src_compile() {
+	lndirs
+	cd ${B}
+	cygmake lib CXX=${CXX} CXXFLAGS="${CXXFLAGS} -fpermissive" LIBFLAGS= STRIP=:
+}
+
+src_install() {
+	cd ${B}
+	cygmake install-lib DESTDIR=${D}${CROSS_PREFIX}
+	dodoc license.txt readme.txt
+}
